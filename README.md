@@ -1,3 +1,4 @@
+![TutorAi Banner](./readmeImages/banner.png)
 # TutorAi
 TutorAi is a platform designed to empower people who are new to programming, particularly those without a conventional computer science background. Leveraging sophisticated AI models, TutorAi delivers comprehensive explanations on diverse programming topics. By harnessing the capabilities of trained AI models, the platform provides personalized guidance, making complex concepts digestible and fostering an inclusive learning environment for aspiring programmers.
 
@@ -5,8 +6,8 @@ TutorAi is a platform designed to empower people who are new to programming, par
 React | Django | JavaScript | Python
 
 ## LoFi Wireframes
-![home Routes](./readmeImages/home.png)
-![chatscreen Routes](./readmeImages/chatscreen.png)
+![home screen](./readmeImages/home.png)
+![chatscreen](./readmeImages/chatscreen.png)
 
 ## User Stories
 * AAU, I want to be able to recieve a simplified explanation of a topic
