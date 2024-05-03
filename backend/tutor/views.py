@@ -1,13 +1,9 @@
 from django.shortcuts import render
 
 # Create your views here.
-def home(request):
-    pass
 
+# Handles the conversation btwn
 def binary_search(request):
-    pass
-
-def profile(request):
     pass
 
 def view_notes(request):
@@ -16,6 +12,8 @@ def view_notes(request):
     pass
 
 def add_note(request):
+    # create a new instance of Note class
+    # pass in the current user's id/key
     pass
 
 def delete_note(request):
