@@ -47,11 +47,20 @@ def register_view(request):
     # check that pass1 == pass2
     if password1 == password2:
         # serialize
-        # if valid:
+        serialize_user = UserSerializer(data = request.data)
+        if serialize_user.is_valid():
             # save user
+            user = serialize_user.save()
             # create a token and return that in the response
             token = Token.objects.get_or_create(user=user)
-    pass
+            return Response({
+                'token': token,
+                'user_id': user.pk,
+                'email': user.email
+            }, status=status.HTTP_201_CREATED)
+        return Response(serialize_user.errors, status=status.HTTP_400_BAD_REQUEST)
+    return Response({'error': 'Passwords Must Match'}, status=status.HTTP_400_BAD_REQUEST)
+
 
 def binary_search(request):
     pass
