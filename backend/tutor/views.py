@@ -1,3 +1,4 @@
+from openai import OpenAI
 
 # DRF Imports
 from rest_framework.decorators import api_view
@@ -56,7 +57,20 @@ def register_view(request):
 
 # CRUD VIEWS:
 
+
+
 def ask_openAi(message):
+    '''
+    client = OpenAI()
+    completion = client.chat.completions.create(
+        model="ft:gpt-3.5-turbo:my-org:custom_suffix:id",
+        messages=[
+            {"role": "system", "content": "You are a helpful assistant."},
+            {"role": "user", "content": {message}}
+        ]
+    )
+    return completion.choices[0].message
+    '''
     return 'A Mock GPT Reply'
 
 @api_view(['POST'])
