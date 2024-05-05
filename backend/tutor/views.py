@@ -1,22 +1,24 @@
-from django.shortcuts import render
 
 # DRF Imports
-from rest_framework.decorators import api_view, permission_classes
+from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from rest_framework.authtoken.models import Token
-from rest_framework.permissions import IsAuthenticated
-from rest_framework import viewsets, status
-from rest_framework.parsers import JSONParser
+from rest_framework import status
 
 # Django Auth
-from django.contrib.auth import authenticate, login, logout
-from django.contrib.auth.models import User
+from django.contrib.auth import authenticate, login
 
-# Serializers
-from .serializers import UserSerializer
+# Model CRUD
+from django.views.generic import CreateView, ListView, DeleteView
+
+# Models & Serializers
+from .models import BinaryConvo
+from .serializers import UserSerializer, BinaryConvoSerializer
 
 
 # Create your views here.
+
+# USER VIEWS:
 
 @api_view(['POST'])
 def login_view(request):
@@ -34,24 +36,14 @@ def login_view(request):
     else:
         return Response({'error': 'Invalid Login Credentials'}, status=status.HTTP_401_UNAUTHORIZED)
 
-
-def logout_view(request):
-    pass
-
+@api_view(['POST'])
 def register_view(request):
-    # retrieve info from request
-    username = request.data.get('username')
-    email = request.data.get('email')
     password1 = request.data.get('password1')
     password2 = request.data.get('password2')
-    # check that pass1 == pass2
     if password1 == password2:
-        # serialize
         serialize_user = UserSerializer(data = request.data)
         if serialize_user.is_valid():
-            # save user
             user = serialize_user.save()
-            # create a token and return that in the response
             token = Token.objects.get_or_create(user=user)
             return Response({
                 'token': token,
@@ -62,9 +54,45 @@ def register_view(request):
     return Response({'error': 'Passwords Must Match'}, status=status.HTTP_400_BAD_REQUEST)
 
 
-def binary_search(request):
-    pass
+# CRUD VIEWS:
 
+def ask_openAi(message):
+    return 'A Mock GPT Reply'
+
+@api_view(['POST'])
+def binary_search(request):
+    token = request.headers.get('Authorization')
+    
+    if token:
+        try:
+            user = Token.objects.get(key=token).user
+            message = request.data.get('message')
+            gpt_response = ask_openAi(message)
+            
+            convo_data = {
+                'user_id' : user.pk,
+                'message' : message,
+                'response' : gpt_response
+            }
+            
+            serializer = BinaryConvoSerializer(data=convo_data)
+            
+            if serializer.is_valid():
+                serializer.save()
+                return Response({'response': gpt_response})
+            else:
+                return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST )
+            
+        except Token.DoesNotExist:
+            return Response({'error': 'Token Not Found'}, status=status.HTTP_401_UNAUTHORIZED)
+    
+    return Response({'error': 'Token Not Provided'}, status=status.HTTP_400_BAD_REQUEST)
+
+
+
+
+# Part of stretch goal
+# TODO: REPLACE BELOW WITH ListView/CreateView/DeleteView
 def view_notes(request):
     # search and filter through all notes in database (grab the ones with user's fk)
     # return it
