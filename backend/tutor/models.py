@@ -5,7 +5,6 @@ class BinaryConvo(models.Model):
     # user's foreign key
     # message sent
     # response received
-    # time created
     pass
 
 class Note(models.Model):

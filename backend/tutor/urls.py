@@ -2,8 +2,8 @@ from django.urls import path
 from . import views
 
 urlpatterns = [
-    path('login/', views.login, name='login'),
-    path('logout/', views.logout, name='logout'),
-    path('register/', views.register, name='register'),
+    path('login/', views.login_view, name='login'),
+    path('register/', views.register_view, name='register'),
     path('binarysearch/', views.binary_search, name='binary_search'),
+    # path('logout/', views.logout_view, name='logout'), #log out handled in frontend by removing token from localstorage
 ]
