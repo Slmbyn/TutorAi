@@ -91,7 +91,7 @@ def binary_search(request):
             gpt_response = ask_openAi(message)
             
             convo_data = {
-                'user_id' : user.pk,
+                'user' : user.pk,
                 'message' : message,
                 'response' : gpt_response
             }
