@@ -73,6 +73,11 @@ def ask_openAi(message):
     '''
     return 'A Mock GPT Reply'
 
+
+# POST Req to: ("http://localhost:8000/binarysearch/")
+# pass the token from localstorage in the request authorization header
+# pass the message in the request body
+
 @api_view(['POST'])
 def binary_search(request):
     token = request.headers.get('Authorization')
@@ -100,7 +105,7 @@ def binary_search(request):
         except Token.DoesNotExist:
             return Response({'error': 'Token Not Found'}, status=status.HTTP_401_UNAUTHORIZED)
     
-    return Response({'error': 'Token Not Provided'}, status=status.HTTP_400_BAD_REQUEST)
+    return Response({'error': 'Token Not Provided In Auth-Header'}, status=status.HTTP_400_BAD_REQUEST)
 
 
 
