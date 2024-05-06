@@ -6,6 +6,8 @@ from rest_framework.response import Response
 from rest_framework.authtoken.models import Token
 from rest_framework import status
 
+from django.views.decorators.csrf import csrf_exempt
+
 # Django Auth
 from django.contrib.auth import authenticate, login
 
@@ -38,7 +40,7 @@ def login_view(request):
         return Response({'error': 'Invalid Login Credentials'}, status=status.HTTP_401_UNAUTHORIZED)
 
 
-# In request body: username, email, pass1, pass2
+# In request body: username, email, password, password2
 @api_view(['POST'])
 def register_view(request):
     password1 = request.data.get('password')
@@ -81,26 +83,38 @@ def ask_openAi(message):
 # pass the message in the request body
 
 @api_view(['POST'])
+@csrf_exempt
 def binary_search(request):
     token = request.headers.get('Authorization')
+    print('token is', token)
     
     if token:
         try:
             user = Token.objects.get(key=token).user
+            print('user is', user)
             message = request.data.get('message')
+            print('message is', message)
             gpt_response = ask_openAi(message)
+            print('gpt_response is', gpt_response)
             
             convo_data = {
                 'user' : user.pk,
                 'message' : message,
                 'response' : gpt_response
             }
+            print('convo_data is', convo_data)
             
             serializer = BinaryConvoSerializer(data=convo_data)
+            print('serializer is', serializer)
             
             if serializer.is_valid():
                 serializer.save()
-                return Response({'response': gpt_response})
+                # return Response({'response': gpt_response})
+                return Response({
+                    'username' : user.username,
+                    'message' : message,
+                    'gpt_response': gpt_response
+                    })
             else:
                 return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST )
             
