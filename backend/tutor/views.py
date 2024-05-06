@@ -23,16 +23,16 @@ from .serializers import UserSerializer, BinaryConvoSerializer
 
 @api_view(['POST'])
 def login_view(request):
-    email = request.data.get('email')
+    username = request.data.get('username')
     password = request.data.get('password')
-    user = authenticate(request, email=email, password=password)
+    user = authenticate(request, username=username, password=password)
     if user is not None:
         login(request, user)
-        token = Token.objects.get_or_create(user=user)
+        token, created = Token.objects.get_or_create(user=user)
         return Response({
-            'token': token,
+            'token': token.key,
             'user_id': user.pk,
-            'email': user.email
+            'username': user.username
         }, status=status.HTTP_200_OK)
     else:
         return Response({'error': 'Invalid Login Credentials'}, status=status.HTTP_401_UNAUTHORIZED)
