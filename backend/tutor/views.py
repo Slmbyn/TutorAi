@@ -37,17 +37,19 @@ def login_view(request):
     else:
         return Response({'error': 'Invalid Login Credentials'}, status=status.HTTP_401_UNAUTHORIZED)
 
+
+# In request body: username, email, pass1, pass2
 @api_view(['POST'])
 def register_view(request):
-    password1 = request.data.get('password1')
+    password1 = request.data.get('password')
     password2 = request.data.get('password2')
     if password1 == password2:
         serialize_user = UserSerializer(data = request.data)
         if serialize_user.is_valid():
             user = serialize_user.save()
-            token = Token.objects.get_or_create(user=user)
+            token, created = Token.objects.get_or_create(user=user)
             return Response({
-                'token': token,
+                'token': token.key,
                 'user_id': user.pk,
                 'email': user.email
             }, status=status.HTTP_201_CREATED)
