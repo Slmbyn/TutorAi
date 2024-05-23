@@ -9,7 +9,7 @@ import '../index.css';
 export const BinaryConvo = () => {
     const [messages, setMessages] = useState([
         {
-          message: "Hello, I'm ChatGPT! Ask me anything!",
+          message: "What is Binary Search? Binary search is a way to find a specific item in a sorted list quickly. Instead of looking through each item one by one, it divides the list in half to see if the item is in the first half or the second half. It keeps doing this until it finds the item or determines that the item is not in the list.",
           sentTime: "just now",
           sender: "ChatGPT",
           direction: 'incoming'
@@ -34,21 +34,22 @@ export const BinaryConvo = () => {
         await processMessageToChatGPT(newMessages);
       };
     
-      async function processMessageToChatGPT(chatMessages) { // messages is an array of messages
-        
+      async function processMessageToChatGPT(chatMessages) { 
+        // TODO: Send API call here
           setMessages([...chatMessages, {
-            message: 'EXAMPLE RESPONSE',
+            message: 'EXAMPLE RESPONSE', // TODO: Replace this w/ message from API response
             direction: 'incoming',
             sender: "ChatGPT"
           }]);
           setIsTyping(false);
         };
       
-    
     return (
         <div>
 
-            <h1 className='my-4 mx-3 text-3xl font-extrabold leading-none tracking-tight md:text-5xl lg:text-6xl"'>Learn The Binary Search Algorithm</h1>
+            <h1 className='my-4 mx-3 text-3xl font-extrabold leading-none tracking-tight md:text-5xl lg:text-6xl"'>
+                Learn The Binary Search Algorithm
+            </h1>
 
             <div className='grid grid-cols-5' style={{ height: 'calc(100vh - 5rem)' }}>
                 <MainContainer className='col-span-5 md:col-start-2 md:col-span-3'>
@@ -58,8 +59,12 @@ export const BinaryConvo = () => {
                             typingIndicator={isTyping ? <TypingIndicator content="ChatGPT is typing" /> : null}
                             >
                             {messages.map((message, i) => {
-                                console.log(message);
-                                return <Message key={i} model={message} />;
+                                return (
+                                    <>
+                                        <p className={message.sender === 'user' ? 'text-right': 'text-left'} >{message.sender}</p>
+                                        <Message className='w-3/5 text-left' key={i} model={message} />
+                                    </>
+                                )
                             })}
                         </MessageList>
                         <MessageInput placeholder="Type message here" onSend={handleSend} />
