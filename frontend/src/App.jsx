@@ -1,4 +1,3 @@
-import logo from './logo.svg';
 import './App.css';
 import { BinaryConvo } from './Components/BinaryConvo';
 
