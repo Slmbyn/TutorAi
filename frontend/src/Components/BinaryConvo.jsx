@@ -6,7 +6,7 @@ import '../index.css';
 
 
 
-export const BinaryConvo = () => {
+const BinaryConvo = () => {
     const [messages, setMessages] = useState([
         {
           message: "What is Binary Search? Binary search is a way to find a specific item in a sorted list quickly. Instead of looking through each item one by one, it divides the list in half to see if the item is in the first half or the second half. It keeps doing this until it finds the item or determines that the item is not in the list.",
@@ -48,11 +48,11 @@ export const BinaryConvo = () => {
         <div>
 
             <h1 className='my-4 mx-3 text-3xl font-extrabold leading-none tracking-tight md:text-5xl lg:text-6xl"'>
-                Learn The Binary Search Algorithm
+                The Binary Search Algorithm
             </h1>
 
-            <div className='grid grid-cols-5' style={{ height: 'calc(100vh - 5rem)' }}>
-                <MainContainer className='col-span-5 md:col-start-2 md:col-span-3'>
+            <div className='grid grid-cols-5' style={{ height: 'calc(100vh - 9rem)' }}>
+                <MainContainer className='rounded-lg col-span-5 md:col-start-2 md:col-span-3'>
                     <ChatContainer >
                         <MessageList
                             scrollBehavior="smooth"
@@ -75,3 +75,5 @@ export const BinaryConvo = () => {
         </div>
     )
 }
+
+export default BinaryConvo
