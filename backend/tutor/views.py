@@ -6,6 +6,8 @@ from rest_framework.response import Response
 from rest_framework.authtoken.models import Token
 from rest_framework import status
 
+# CSRF Imports
+from django.middleware.csrf import get_token
 from django.views.decorators.csrf import csrf_exempt
 
 # Django Auth
@@ -21,9 +23,11 @@ from .serializers import UserSerializer, BinaryConvoSerializer
 
 # Create your views here.
 
-# USER VIEWS:
+
+# ************* USER MANAGEMENT VIEWS **************:
 
 @api_view(['POST'])
+@csrf_exempt
 def login_view(request):
     username = request.data.get('username')
     password = request.data.get('password')
@@ -31,8 +35,10 @@ def login_view(request):
     if user is not None:
         login(request, user)
         token, created = Token.objects.get_or_create(user=user)
+        csrf_token = get_token(request)
         return Response({
             'token': token.key,
+            'csrf_token': csrf_token,
             'user_id': user.pk,
             'username': user.username
         }, status=status.HTTP_200_OK)
@@ -50,8 +56,10 @@ def register_view(request):
         if serialize_user.is_valid():
             user = serialize_user.save()
             token, created = Token.objects.get_or_create(user=user)
+            csrf_token = get_token(request)
             return Response({
                 'token': token.key,
+                'csrf_token': csrf_token,
                 'user_id': user.pk,
                 'email': user.email
             }, status=status.HTTP_201_CREATED)
@@ -59,9 +67,9 @@ def register_view(request):
     return Response({'error': 'Passwords Must Match'}, status=status.HTTP_400_BAD_REQUEST)
 
 
-# CRUD VIEWS:
 
 
+# ****************** CRUD VIEWS: *****************
 
 def ask_openAi(message):
     '''
