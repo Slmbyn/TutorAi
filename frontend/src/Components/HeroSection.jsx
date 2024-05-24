@@ -12,7 +12,7 @@ const HeroSection = () => {
         // transition={{ duration: .5 }}
     >
 
-        <div className='min-h-screen bg-[#121212] flex items-center justify-center'>
+        <div className='h-[calc(100vh-2.5rem)] bg-[#121212] flex items-center justify-center'>
             <h1 className='text-white'>TutorAi</h1>
         </div>
 
