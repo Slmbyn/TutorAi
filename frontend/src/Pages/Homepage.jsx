@@ -5,7 +5,6 @@ import LessonsSection from '../Components/LessonsSection'
 const Homepage = () => {
   return (
     <>
-    <div>Homepage</div>
     <HeroSection />
     <LessonsSection />
     </>
