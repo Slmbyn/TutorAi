@@ -45,9 +45,9 @@ const BinaryConvo = () => {
         };
       
     return (
-        <div>
+        <div className='mt-16'>
 
-            <h1 className='my-4 mx-3 text-3xl font-extrabold leading-none tracking-tight md:text-5xl lg:text-6xl"'>
+            <h1 className='my-4 pt-2 mx-3 text-3xl font-extrabold leading-none tracking-tight md:text-5xl lg:text-6xl"'>
                 The Binary Search Algorithm
             </h1>
 
@@ -61,7 +61,7 @@ const BinaryConvo = () => {
                             {messages.map((message, i) => {
                                 return (
                                     <>
-                                        <p className={message.sender === 'user' ? 'text-right': 'text-left'} >{message.sender}</p>
+                                        <p className={message.sender === 'user' ? 'text-right mt-2': 'text-left mt-2'} >{message.sender}</p>
                                         <Message className='w-3/5 text-left' key={i} model={message} />
                                     </>
                                 )
