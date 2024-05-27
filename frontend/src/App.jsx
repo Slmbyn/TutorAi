@@ -4,6 +4,7 @@ import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import BinaryConvo from './Components/BinaryConvo';
 import Homepage from './Pages/Homepage'
 import Navbar from './Components/Navbar'
+import Register from './Components/Register';
 
 function App() {
   return (
@@ -14,6 +15,7 @@ function App() {
           {/* HomePage  */} {/* within homepage include components HeroSection and LessonsSection (within LessonsSection, include component for LessonCards)  */} 
           <Route path="/" element={<Homepage />} />
           <Route path="/binarysearch" element={<BinaryConvo/>} />
+          <Route path="/register" element={<Register/>} />
         </Routes>
     </Router>
       </div>
