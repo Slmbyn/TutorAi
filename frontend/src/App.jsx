@@ -5,6 +5,7 @@ import BinaryConvo from './Components/BinaryConvo';
 import Homepage from './Pages/Homepage'
 import Navbar from './Components/Navbar'
 import Register from './Components/Register';
+import Login from './Components/Login';
 
 function App() {
   return (
@@ -16,6 +17,7 @@ function App() {
           <Route path="/" element={<Homepage />} />
           <Route path="/binarysearch" element={<BinaryConvo/>} />
           <Route path="/register" element={<Register/>} />
+          <Route path="/login" element={<Login/>} />
         </Routes>
     </Router>
       </div>
