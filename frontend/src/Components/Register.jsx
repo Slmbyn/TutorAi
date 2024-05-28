@@ -1,11 +1,13 @@
-import React, { useState } from 'react'
+import React, { useState, useContext } from 'react'
 import { useNavigate } from "react-router-dom";
 import axios from 'axios';
 import '../index.css'; // Tailwind import
+import { UserContext } from './UserContext'
 
 const Register = () => {
     const navigate = useNavigate();
-    const [user, setUser] = useState({
+    const { setUser } = useContext(UserContext);
+    const [userData, setUserData] = useState({
         username: "",
         email: "",
         password: "",
@@ -13,16 +15,19 @@ const Register = () => {
     })
 
     const handleChange = (e) => {
-        setUser({ ...user, [e.target.name]: e.target.value });
+        setUserData({ ...userData, [e.target.name]: e.target.value });
     };
 
     async function handleSubmit (evt) {
         evt.preventDefault();
-        console.log('reg user:', user)
         // send a request to /register
-        const response = await axios.post('http://localhost:8000/register/', user);
+        const response = await axios.post('http://localhost:8000/register/', userData);
         // store token in local storage
         console.log('reg response:', response)
+        setUser({
+            username: response.data.username,
+            email: response.data.email
+        })
         localStorage.setItem('token', response.data.token);
         // redirect to /home
         navigate('/');
