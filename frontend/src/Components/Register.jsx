@@ -1,11 +1,15 @@
 import React, { useState } from 'react'
+import { useNavigate } from "react-router-dom";
+import axios from 'axios';
 import '../index.css'; // Tailwind import
 
 const Register = () => {
+    const navigate = useNavigate();
     const [user, setUser] = useState({
         username: "",
         email: "",
         password: "",
+        password2: "",
     })
 
     const handleChange = (e) => {
@@ -14,13 +18,14 @@ const Register = () => {
 
     async function handleSubmit (evt) {
         evt.preventDefault();
+        console.log('reg user:', user)
         // send a request to /register
-        // const response = await axios.post('http://localhost:8000/register/', user);
-
-        // user info should be in req body
+        const response = await axios.post('http://localhost:8000/register/', user);
         // store token in local storage
+        console.log('reg response:', response)
+        localStorage.setItem('token', response.data.token);
         // redirect to /home
-        console.log(user)
+        navigate('/');
     }
   return (
     <div className="flex items-center justify-center min-h-screen bg-gray-100">
@@ -46,6 +51,13 @@ const Register = () => {
             type="password" 
             name="password"
             placeholder="Password" 
+            className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
+          />
+          <input 
+            onChange={handleChange}
+            type="password" 
+            name="password2"
+            placeholder="Confirm Password" 
             className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
           />
           <button 
