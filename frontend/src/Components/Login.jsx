@@ -6,7 +6,7 @@ import '../index.css'; // Tailwind import
 
 const Login = () => {
     const navigate = useNavigate();
-    const { setUser } = useContext(UserContext);
+    const { user, setUser } = useContext(UserContext);
     const [userData, setUserData] = useState({
         username: "",
         password: ""
@@ -24,8 +24,9 @@ const Login = () => {
         // store token in local storage
         console.log('reg response:', response)
         setUser({
-            username: response.data.username,
-            email: response.data.email
+          username: response.data.username,
+          email: response.data.email,
+          user_id: response.data.user_id
         })
         localStorage.setItem('token', response.data.token);
         // redirect to /home

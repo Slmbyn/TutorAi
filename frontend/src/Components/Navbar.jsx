@@ -31,9 +31,11 @@ export default function Navbar() {
 
 
   const handleLogout = () => {
+    console.log('logs out:', user)
     setUser({
       username: '',
       email: '',
+      user_id: null
     })
     localStorage.removeItem('token')
   }

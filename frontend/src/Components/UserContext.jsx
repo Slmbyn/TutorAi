@@ -5,7 +5,8 @@ export const UserContext = createContext();
 export const UserProvider = ({ children }) => {
     const [user, setUser] = useState({
         username: "",
-        email: ""
+        email: "",
+        user_id: null
     });
 
     return(

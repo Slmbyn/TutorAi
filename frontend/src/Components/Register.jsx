@@ -26,7 +26,8 @@ const Register = () => {
         console.log('reg response:', response)
         setUser({
             username: response.data.username,
-            email: response.data.email
+            email: response.data.email,
+            user_id: response.data.user_id
         })
         localStorage.setItem('token', response.data.token);
         // redirect to /home
