@@ -1,4 +1,8 @@
-import { Fragment } from 'react'
+import { Fragment, useContext } from 'react'
+import { useNavigate } from "react-router-dom";
+import { UserContext } from './UserContext'
+
+
 import {
   Disclosure,
   DisclosureButton,
@@ -23,6 +27,25 @@ function classNames(...classes) {
 }
 
 export default function Navbar() {
+  const { user, setUser } = useContext(UserContext);
+
+
+  const handleLogout = () => {
+    setUser({
+      username: '',
+      email: '',
+    })
+    localStorage.removeItem('token')
+  }
+
+  const handleLogIn = () => {}
+
+  const capitalizeFirstLetter = (string) => {
+    if (!string) return '';
+    return string.charAt(0).toUpperCase() + string.slice(1).toLowerCase();
+  };
+  
+
   return (
     <Disclosure as="nav" className="bg-gray-800 fixed top-0 left-0 right-0 z-10">
       {({ open }) => (
@@ -67,18 +90,55 @@ export default function Navbar() {
                   </div>
                 </div>
               </div>
+
+              {/* TODO: Add conditional. If user then show login/register button, else show logout button and user's name */}
+              {/* <button 
+                className="w-full bg-blue-600 text-white py-2 rounded-lg hover:bg-blue-700 transition duration-200"
+                onClick={() => {window.location.href = '/login';}}
+              >
+                Login
+              </button>  */}
+
               <div className="absolute inset-y-0 right-0 flex items-center pr-2 sm:static sm:inset-auto sm:ml-6 sm:pr-0">
-                <button
+                {/* <button
                   type="button"
                   className="relative rounded-full bg-gray-800 p-1 text-gray-400 hover:text-white focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-800"
                 >
                   <span className="absolute -inset-1.5" />
                   <span className="sr-only">View notifications</span>
                   <BellIcon className="h-6 w-6" aria-hidden="true" />
-                </button>
+                </button> */}
+                {user.username ? (
+                <div className="flex items-center space-x-4">
+                  <h1 className="bg-gray-700 text-white rounded-md px-3 py-2 text-sm font-medium">
+                      Hi, {capitalizeFirstLetter(user.username)}
+                  </h1>
+                  <button 
+                      className="bg-blue-600 text-white py-2 px-4 rounded-lg hover:bg-blue-700 transition duration-200"
+                      onClick={handleLogout}
+                  >
+                      Logout
+                  </button>
+                </div>
+                ) : (
+                <div className="flex items-center space-x-4">
+                  <button 
+                    className="bg-blue-700 text-white py-2 px-4 rounded-lg hover:bg-blue-600 transition duration-200"
+                    onClick={() => {window.location.href = '/register';}}
+                  >
+                    Register
+                  </button>
+                  <button 
+                    className="bg-blue-600 text-white py-2 px-4 rounded-lg hover:bg-blue-700 transition duration-200"
+                    onClick={() => {window.location.href = '/login';}}
+                  >
+                    Login
+                  </button>
+                </div>
+                )}
 
                 {/* Profile dropdown */}
-                <Menu as="div" className="relative ml-3">
+                {/* <Menu as="div" className="relative ml-3">
                   <div>
                     <MenuButton className="relative flex rounded-full bg-gray-800 text-sm focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-800">
                       <span className="absolute -inset-1.5" />
@@ -131,7 +191,7 @@ export default function Navbar() {
                       </MenuItem>
                     </MenuItems>
                   </Transition>
-                </Menu>
+                </Menu> */}
               </div>
             </div>
           </div>
