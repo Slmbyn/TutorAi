@@ -11,7 +11,6 @@ function App() {
   return (
       <div className="App">
         <Navbar />
-    <Router>
         <Routes>
           {/* HomePage  */} {/* within homepage include components HeroSection and LessonsSection (within LessonsSection, include component for LessonCards)  */} 
           <Route path="/" element={<Homepage />} />
@@ -19,7 +18,6 @@ function App() {
           <Route path="/register" element={<Register/>} />
           <Route path="/login" element={<Login/>} />
         </Routes>
-    </Router>
       </div>
   );
 }

@@ -18,7 +18,6 @@ const Login = () => {
 
     async function handleSubmit (evt) {
         evt.preventDefault();
-        console.log('reg userData:', userData)
         // send a request to /Login
         const response = await axios.post('http://localhost:8000/login/', userData);
         // store token in local storage

@@ -1,12 +1,14 @@
 import React from 'react'
-import { useState } from 'react'
+import { useState, useEffect, useContext } from 'react'
 import '@chatscope/chat-ui-kit-styles/dist/default/styles.min.css';
 import { MainContainer, ChatContainer, MessageList, Message, MessageInput, TypingIndicator } from '@chatscope/chat-ui-kit-react';
+import { UserContext } from './UserContext';
 import '../index.css';
 
 
 
 const BinaryConvo = () => {
+    const { user } = useContext(UserContext)
     const [messages, setMessages] = useState([
         {
           message: "What is Binary Search? Binary search is a way to find a specific item in a sorted list quickly. Instead of looking through each item one by one, it divides the list in half to see if the item is in the first half or the second half. It keeps doing this until it finds the item or determines that the item is not in the list.",
@@ -16,7 +18,7 @@ const BinaryConvo = () => {
         }
       ]);
       const [isTyping, setIsTyping] = useState(false);
-    
+
       const handleSend = async (message) => {
         const newMessage = {
           message,
@@ -33,6 +35,25 @@ const BinaryConvo = () => {
         setIsTyping(true);
         await processMessageToChatGPT(newMessages);
       };
+
+      useEffect(() => {
+        const fetch_conversation_history = async () => {
+          try {
+            const response = await fetch('http://localhost:8000/binaryconvohistory/', user.user_id);
+            console.log('convo history response', response)
+            setMessages([
+              ...messages, 
+              {message:response.data.message ? response.data.message : response.data.gpt_response, 
+                sentTime: "just now",
+                sender: response.data.message ?  "user" : "ChatGPT",
+                direction: response.data.message ?' outgoing' : 'incoming'
+            }])
+          } catch (error) {
+            console.log('Error fetching conversation',error);
+          }
+        }
+        fetch_conversation_history();
+      }, [])
     
       async function processMessageToChatGPT(chatMessages) { 
         // TODO: Send API call here
