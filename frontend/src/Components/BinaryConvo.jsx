@@ -3,6 +3,7 @@ import { useState, useEffect, useContext } from 'react'
 import '@chatscope/chat-ui-kit-styles/dist/default/styles.min.css';
 import { MainContainer, ChatContainer, MessageList, Message, MessageInput, TypingIndicator } from '@chatscope/chat-ui-kit-react';
 import { UserContext } from './UserContext';
+import axios from 'axios';
 import '../index.css';
 
 
@@ -36,24 +37,68 @@ const BinaryConvo = () => {
         await processMessageToChatGPT(newMessages);
       };
 
+      // useEffect(() => {
+      //   const fetch_conversation_history = async () => {
+      //     try {
+      //       const response = await axios.get('http://localhost:8000/binaryconvohistory/', user.user_id);
+      //       console.log('convo history response', response)
+      //       setMessages([
+      //         ...messages, 
+      //         {message:response.data.message ? response.data.message : response.data.gpt_response, 
+      //           sentTime: "just now",
+      //           sender: response.data.message ?  "user" : "ChatGPT",
+      //           direction: response.data.message ?' outgoing' : 'incoming'
+      //       }])
+      //     } catch (error) {
+      //       console.log('Error fetching conversation',error);
+      //     }
+      //   }
+      //   fetch_conversation_history();
+      // }, [])
+
       useEffect(() => {
-        const fetch_conversation_history = async () => {
-          try {
-            const response = await fetch('http://localhost:8000/binaryconvohistory/', user.user_id);
-            console.log('convo history response', response)
-            setMessages([
-              ...messages, 
-              {message:response.data.message ? response.data.message : response.data.gpt_response, 
+        const fetchConversationHistory = async () => {
+            try {
+                const response = await axios.get('http://localhost:8000/binaryconvohistory/', {
+                    headers: {
+                        Authorization: `Bearer ${localStorage.getItem('token')}`
+                        // console.log('authorization')
+                    },
+                    params: {
+                        user_id: user.user_id
+                    }
+                });
+                console.log('convo history response', response);
+
+                const convoHistory = [];
+
+        // todo: delete convo history and test to see if messages duplicate
+        response.data.forEach(convo => {
+            // Add outgoing message
+            convoHistory.push({
+                message: convo.message,
                 sentTime: "just now",
-                sender: response.data.message ?  "user" : "ChatGPT",
-                direction: response.data.message ?' outgoing' : 'incoming'
-            }])
-          } catch (error) {
-            console.log('Error fetching conversation',error);
-          }
-        }
-        fetch_conversation_history();
-      }, [])
+                sender: "user", //todo: update this to show the users name
+                direction: 'outgoing'
+            });
+
+            // Add incoming response
+            convoHistory.push({
+                message: convo.response,
+                sentTime: "just now",
+                sender: "ChatGPT",
+                direction: 'incoming'
+            });
+        });
+
+        setMessages(prevMessages => [...prevMessages, ...convoHistory]);
+            } catch (error) {
+                console.log('Error fetching conversation', error);
+            }
+        };
+
+        fetchConversationHistory();
+    }, [user]);
     
       async function processMessageToChatGPT(chatMessages) { 
         // TODO: Send API call here
