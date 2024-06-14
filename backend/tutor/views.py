@@ -12,6 +12,8 @@ from django.views.decorators.csrf import csrf_exempt
 
 # Django Auth
 from django.contrib.auth import authenticate, login
+from django.contrib.auth.decorators import login_required
+
 
 # Model CRUD
 from django.views.generic import CreateView, ListView, DeleteView
@@ -36,11 +38,13 @@ def login_view(request):
         login(request, user)
         token, created = Token.objects.get_or_create(user=user)
         csrf_token = get_token(request)
+        print('USER DATA:', user)
         return Response({
             'token': token.key,
             'csrf_token': csrf_token,
             'user_id': user.pk,
-            'username': user.username
+            'username': user.username,
+            'email': user.email,
         }, status=status.HTTP_200_OK)
     else:
         return Response({'error': 'Invalid Login Credentials'}, status=status.HTTP_401_UNAUTHORIZED)
@@ -57,11 +61,13 @@ def register_view(request):
             user = serialize_user.save()
             token, created = Token.objects.get_or_create(user=user)
             csrf_token = get_token(request)
+            print('USER DATA:', user)
             return Response({
                 'token': token.key,
                 'csrf_token': csrf_token,
                 'user_id': user.pk,
-                'email': user.email
+                'email': user.email,
+                'username': user.username
             }, status=status.HTTP_201_CREATED)
         return Response(serialize_user.errors, status=status.HTTP_400_BAD_REQUEST)
     return Response({'error': 'Passwords Must Match'}, status=status.HTTP_400_BAD_REQUEST)
@@ -131,6 +137,23 @@ def binary_search(request):
     
     return Response({'error': 'Token Not Provided In Auth-Header'}, status=status.HTTP_400_BAD_REQUEST)
 
+
+# todo: test with another user, confirm that Authorization token should be Bearer
+@api_view(['GET'])
+# @login_required
+def get_binary_convo(request):
+    # token = request.headers.get('Authorization')
+    # user = Token.objects.get(key=token).user
+    # user_id = request.data.get('user_id')
+    user_id = request.query_params.get('user_id')
+    print('user_id is :', user_id)        
+    if user_id:
+        conversations = BinaryConvo.objects.filter(user=user_id).values('message', 'response')
+        print('CONVO HISTORY', list(conversations))
+        if conversations:
+            return Response(list(conversations), status=status.HTTP_200_OK)
+        return Response({'Error': 'Conversations Not Found'}, status=status.HTTP_404_NOT_FOUND)
+    return Response({'Error': 'user_id not recieved'}, status=status.HTTP_400_BAD_REQUEST)
 
 
 
