@@ -71,27 +71,26 @@ const BinaryConvo = () => {
                 console.log('convo history response', response);
 
                 const convoHistory = [];
+                // todo: delete convo history and test to see if messages duplicate
+                response.data.forEach(convo => {
+                    // Add outgoing message
+                    convoHistory.push({
+                        message: convo.message,
+                        sentTime: "just now",
+                        sender: "user", //todo: update this to show the users name
+                        direction: 'outgoing'
+                    });
 
-        // todo: delete convo history and test to see if messages duplicate
-        response.data.forEach(convo => {
-            // Add outgoing message
-            convoHistory.push({
-                message: convo.message,
-                sentTime: "just now",
-                sender: "user", //todo: update this to show the users name
-                direction: 'outgoing'
-            });
+                    // Add incoming response
+                    convoHistory.push({
+                        message: convo.response,
+                        sentTime: "just now",
+                        sender: "ChatGPT",
+                        direction: 'incoming'
+                    });
+                });
 
-            // Add incoming response
-            convoHistory.push({
-                message: convo.response,
-                sentTime: "just now",
-                sender: "ChatGPT",
-                direction: 'incoming'
-            });
-        });
-
-        setMessages(prevMessages => [...prevMessages, ...convoHistory]);
+                setMessages(prevMessages => [...prevMessages, ...convoHistory]);
             } catch (error) {
                 console.log('Error fetching conversation', error);
             }
